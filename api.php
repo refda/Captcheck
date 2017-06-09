@@ -28,7 +28,7 @@ switch ($VARS['action']) {
             $scrambled["real"][] = $a['aid'];
             $scrambled["fake"][] = substr(hash("md5", mt_rand()), 0, 20);
         }
-        $database->insert("sessions", ["skey" => $skey, "aid" => $correct_answer['aid'], "expired" => 0, "#timestamp" => "NOW()"]);
+        $database->insert("sessions", ["skey" => $skey, "aid" => $correct_answer['aid'], "expired" => 0, "#timestamp" => "NOW()", "ipaddr" => getUserIP()]);
         $sid = $database->id();
         $scrambled_insert = [];
         for ($i = 0; $i < count($scrambled['real']); $i++) {

@@ -3,6 +3,13 @@
 require __DIR__ . '/required.php';
 header("Content-Type: application/json");
 
+// Oldest session allowed
+$session_min_date = date("Y-m-d H:i:s", strtotime("-" . SESSION_EXPIRE_MINUTES . " minutes"));
+// Delete old sessions
+$old_sessions = $database->select("sessions", "sid", ["timestamp[<]" => $session_min_date]);
+$database->delete("scrambled_answers", ["sid" => $old_sessions]);
+$database->delete("sessions", ["sid" => $old_sessions]);
+
 switch ($VARS['action']) {
     case "ping":
         $out = ["status" => "OK", "pong" => true];

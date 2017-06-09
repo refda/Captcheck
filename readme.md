@@ -4,6 +4,7 @@ Captcheck
 Easy, light, self-hostable CAPTCHA service.  Works on all modern browsers and 
 IE9+.  Uses icons from Font-Awesome.
 
+
 How to use
 ----------
 
@@ -43,6 +44,16 @@ Example URL:
 Example responses:  
 `{"session":"some_session_id","result":true}`  
 `{"session":"some_session_id","result":false,"msg":"Answer incorrect."}`
+
+
+Installation
+------------
+
+1. Run composer install.
+2. Copy settings.template.php to settings.php and plug in your settings.
+3. Install the database.
+4. Customize captcheck.js with the correct api_url.
+5. Follow the How to Use section and the example setup in test.html and test.php.
 
 
 Execution Flow

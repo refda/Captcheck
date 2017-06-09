@@ -1,5 +1,5 @@
 window.onload = function () {
-    var api_url = "http://192.168.25.1/captcheck/api.php";
+    var api_url = "https://captcheck.netsyms.com/api.php";
     var getJSON = function (url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
@@ -13,7 +13,7 @@ window.onload = function () {
     getJSON(api_url + "?action=new", function (status, json) {
         /* Add custom styles */
         var styles = document.createElement('style');
-        styles.innerHTML = ".captcheck_box {font-family: Ubuntu, Arial, sans-serif; border: 1px solid #e0e0e0; border-radius: 3px; display: inline-block; padding: 3px; margin: 5px 2px 5px 1px; background-color: #f5f5f5;} .captcheck_answer_label > input {visibility: hidden; position: absolute;} .captcheck_answer_label > input + img {cursor: pointer; border: 2px solid transparent; border-radius: 3px; min-width: 32px; width: 18%; max-width: 64px;} .captcheck_answer_label > input:checked + img {cursor: pointer; border: 2px solid #424242; border-radius: 3px;} .captcheck_error_message { color: red; }";
+        styles.innerHTML = ".captcheck_box {font-family: Ubuntu, Arial, sans-serif; color: black; border: 1px solid #e0e0e0; border-radius: 3px; display: inline-block; padding: 3px; margin: 5px 2px 5px 1px; background-color: #f5f5f5;} .captcheck_label_message {color: black;} .captcheck_answer_label > input {visibility: hidden; position: absolute;} .captcheck_answer_label > input + img {cursor: pointer; border: 2px solid transparent; border-radius: 3px; min-width: 32px; width: 18%; max-width: 64px;} .captcheck_answer_label > input:checked + img {cursor: pointer; border: 2px solid #424242; border-radius: 3px;} .captcheck_error_message {color: red;}";
         document.body.appendChild(styles);
 
         /* Get captcha container div */
@@ -35,6 +35,7 @@ window.onload = function () {
             answer_div.innerHTML = answers;
             /* Create question */
             var question_div = document.createElement("div");
+            question_div.setAttribute("class", "captcheck_label_message");
             question_div.innerHTML = "Click on the <b>" + data.question + "</b>:";
 
             /* Add question and answers */

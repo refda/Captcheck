@@ -61,11 +61,19 @@ switch ($VARS['action']) {
         imageSaveAlpha($img, true);
         $black = imagecolorallocate($img, 0, 0, 0);
         $white = imagecolorallocate($img, 255, 255, 255);
-        for ($i = 0; $i < 512; $i++) {
+        // Add static noise
+        for ($i = 0; $i < 150; $i++) {
             imagesetpixel($img, mt_rand(0, 63), mt_rand(0, 63), $black);
         }
-        for ($i = 0; $i < 256; $i++) {
+        for ($i = 0; $i < 75; $i++) {
             imagesetpixel($img, mt_rand(0, 63), mt_rand(0, 63), $white);
+        }
+        // Add lines
+        for ($i = 0; $i < 2; $i++) {
+            imageline($img, mt_rand(0, 63), mt_rand(0, 63), mt_rand(0, 63), mt_rand(0, 63), $black);
+        }
+        for ($i = 0; $i < 5; $i++) {
+            imageline($img, mt_rand(0, 63), mt_rand(0, 63), mt_rand(0, 63), mt_rand(0, 63), $white);
         }
         imagepng($img);
         exit();

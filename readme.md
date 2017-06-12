@@ -8,8 +8,8 @@ IE9+.  Uses icons from Font-Awesome.
 How to use
 ----------
 
-In your form, put an empty div with the ID "captcheck_container". 
-Add `captcheck.js` into your page.
+In your form, put an empty div with the class "captcheck_container". 
+Add `captcheck.js` (or `captcheck.dist.js`) into your page.
 
     <!DOCTYPE html>
     <html>
@@ -22,7 +22,7 @@ Add `captcheck.js` into your page.
         <body>
             <form action="submit.php">
                 <input type="text" name="form_field" placeholder="Some random form field" />
-                <div id="captcheck_container">
+                <div class="captcheck_container">
                 </div>
                 <button type="submit">Submit Form</button>
             </form>
@@ -65,7 +65,7 @@ Execution Flow
     JS -> API:      Request session ID, question, and answers (with scrambled random codes)
     API -> JS:      Sends info, saves session ID, correct answer, and scrambled answer codes in DB
     JS -> API:      Requests answer images by sending scrambled value and session ID
-    JS -> FORM:     Adds hidden field with value=session ID, displays question and images
+    JS -> FORM:     Adds hidden field with value=session ID, displays question and images (or text box)
     [USER SUBMITS FORM]
-    SITE -> API:    Sends session ID and scrambled answer
+    SITE -> API:    Sends session ID and answer
     API -> SITE:    Responds with true/false to indicate if the answer is valid, marks session as expired to prevent CAPTCHA reuse

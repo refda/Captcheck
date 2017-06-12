@@ -43,3 +43,27 @@ Don't use this file in your site; captcheck.js contains it.
 .captcheck_error_message {
     color: red;
 }
+
+.captcheck_question_image {
+    display: initial;
+}
+
+.captcheck_question_access {
+    display: none;
+}
+
+.captcheck_alt_question_button {
+    float: right;
+    font-size: 80%;
+    cursor: pointer;
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.captcheck_answer_images {
+    display: initial;
+}
+
+.captcheck_answer_access {
+    display: none;
+}

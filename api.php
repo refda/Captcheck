@@ -35,9 +35,15 @@ switch ($VARS['action']) {
             $scrambled_insert[] = ["sid" => $sid, "aid" => $scrambled['real'][$i], "acode" => $scrambled['fake'][$i]];
         }
         $database->insert("scrambled_answers", $scrambled_insert);
+        $questions = ["Please click on the [].", "Click the [].", "Find the []."];
+        $accessible_questions = ["Please type [] here.", "Enter [] into the box.", "Type []."];
+        shuffle($questions);
+        shuffle($accessible_questions);
         $resp = [
             "session" => $skey,
-            "question" => $correct_answer['aname'],
+            "id_prefix" => substr(hash("md5", mt_rand()), 3, 5),
+            "question_i" => str_replace("[]", $correct_answer['aname'], $questions[0]),
+            "question_a" => str_replace("[]", $correct_answer['aname'], $accessible_questions[0]),
             "answers" => $scrambled["fake"]
         ];
         exit(json_encode($resp));
@@ -88,15 +94,28 @@ switch ($VARS['action']) {
             echo json_encode(["session" => $VARS['session_id'], "result" => false, "msg" => "Session key already used."]);
             exit();
         }
-        if (!$database->has("scrambled_answers", ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]])) {
+
+        $image = false;
+        if ($database->has("scrambled_answers", ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]])) {
+            // Image maybe correct
+            $image = true;
+        } else if ($database->has("sessions", ["[>]answers" => ["aid" => "aid"]], ["AND" => ["sid" => $sid, "aname" => $VARS['answer_id']]])) {
+            // Accessible text correct
+            $image = false;
+        } else {
+            // Invalid answer
             echo json_encode(["session" => $VARS['session_id'], "result" => false, "msg" => "Answer invalid."]);
             exit();
         }
-        $aid = $database->get('scrambled_answers', 'aid', ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]]);
-        if ($database->has('sessions', ["AND" => ["sid" => $sid, "aid" => $aid]])) {
-            echo json_encode(["session" => $VARS['session_id'], "result" => true]);
+        if ($image) {
+            $aid = $database->get('scrambled_answers', 'aid', ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]]);
+            if ($database->has('sessions', ["AND" => ["sid" => $sid, "aid" => $aid]])) {
+                echo json_encode(["session" => $VARS['session_id'], "result" => true]);
+            } else {
+                echo json_encode(["session" => $VARS['session_id'], "result" => false, "msg" => "Answer incorrect."]);
+            }
         } else {
-            echo json_encode(["session" => $VARS['session_id'], "result" => false, "msg" => "Answer incorrect."]);
+            echo json_encode(["session" => $VARS['session_id'], "result" => true]);
         }
         $database->update("sessions", ['expired' => 1], ["sid" => $sid]);
         exit();

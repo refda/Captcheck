@@ -1,7 +1,9 @@
-![Captcheck](https://source.netsyms.com/Netsyms/Captcheck/raw/master/logo.png)
+<img src="https://source.netsyms.com/Netsyms/Captcheck/raw/master/logo.png" alt="Captcheck" style="max-width: 50%;" />
 
-Easy, light, self-hostable CAPTCHA service.  Works on all modern browsers and 
-IE9+.  Uses icons from Font-Awesome.
+
+Easy, light, self-hostable CAPTCHA service.  Works on modern browsers (and 
+IE9+).  Uses a selection of icons from Font-Awesome.  Text-only accessibility 
+mode and support for keyboard-only operation.
 
 
 How to use

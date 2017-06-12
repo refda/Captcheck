@@ -1,5 +1,4 @@
-Captcheck
-=========
+![Captcheck](https://source.netsyms.com/Netsyms/Captcheck/raw/master/logo.png)
 
 Easy, light, self-hostable CAPTCHA service.  Works on all modern browsers and 
 IE9+.  Uses icons from Font-Awesome.

@@ -114,7 +114,7 @@ switch ($VARS['action']) {
         if ($database->has("scrambled_answers", ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]])) {
             // Image maybe correct
             $image = true;
-        } else if ($database->has("sessions", ["[>]access_answers" => ["acqid" => "acqid"]], ["AND" => ["sid" => $sid, "OR" => ["acatext" => $VARS['answer_id'], "acahash" => hash('md5', $VARS['answer_id'])]]])) {
+        } else if ($database->has("sessions", ["[>]access_answers" => ["acqid" => "acqid"]], ["AND" => ["sid" => $sid, "OR" => ["acatext" => strtolower($VARS['answer_id']), "acahash" => hash('md5', strtolower($VARS['answer_id']))]]])) {
             // Accessible text correct
             $image = false;
         } else {

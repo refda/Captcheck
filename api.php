@@ -18,32 +18,47 @@ switch ($VARS['action']) {
         // generate unique session ID that has an essentially zero chance of being a duplicate.
         // Contains a hash of a secure random number, a hash of the user's IP, and 23 uniqid() characters.
         $skey = uniqid(substr(hash("md5", mt_rand()), 3, 5) . hash("md5", getUserIP()), true);
-        $answers = $database->select('answers', ['aid', 'aname']);
+        
+        // Image problem
+        // 
+        // Get five random options
+        $answer_count = $database->count('answers');
+        $answers = $database->select('answers', ['aid', 'aname'], ["LIMIT" => [mt_rand(0, $answer_count - 6), 5]]);
         shuffle($answers);
-        $answers = array_slice($answers, 0, 5);
-        //var_dump($answers);
+        // Pick a correct one at random
         $correct_answer = $answers[mt_rand(0, count($answers) - 1)];
+        // Scramble the answer names so the client doesn't know the real answers.
         $scrambled = ["real" => [], "fake" => []];
         foreach ($answers as $a) {
             $scrambled["real"][] = $a['aid'];
             $scrambled["fake"][] = substr(hash("md5", mt_rand()), 0, 20);
         }
-        $database->insert("sessions", ["skey" => $skey, "aid" => $correct_answer['aid'], "expired" => 0, "#timestamp" => "NOW()", "ipaddr" => getUserIP()]);
+        
+        // Text problem
+        //
+        // Get random question
+        $access_count = $database->count('access_questions');
+        $access_question = $database->select('access_questions', ['acqid', 'acqtext'], ["LIMIT" => [mt_rand(0, $access_count - 1), 1]])[0];
+        
+        // Save the session data
+        $database->insert("sessions", ["skey" => $skey, "aid" => $correct_answer['aid'], "acqid" => $access_question['acqid'], "expired" => 0, "#timestamp" => "NOW()", "ipaddr" => getUserIP()]);
         $sid = $database->id();
+        // Save the answer data
         $scrambled_insert = [];
         for ($i = 0; $i < count($scrambled['real']); $i++) {
             $scrambled_insert[] = ["sid" => $sid, "aid" => $scrambled['real'][$i], "acode" => $scrambled['fake'][$i]];
         }
         $database->insert("scrambled_answers", $scrambled_insert);
+        
+        // Vary question wording a little
         $questions = ["Please click on the [].", "Click the [].", "Find the []."];
-        $accessible_questions = ["Please type [] here.", "Enter [] into the box.", "Type []."];
         shuffle($questions);
-        shuffle($accessible_questions);
+        
         $resp = [
             "session" => $skey,
             "id_prefix" => substr(hash("md5", mt_rand()), 3, 5),
             "question_i" => str_replace("[]", $correct_answer['aname'], $questions[0]),
-            "question_a" => str_replace("[]", $correct_answer['aname'], $accessible_questions[0]),
+            "question_a" => $access_question['acqtext'],
             "answers" => $scrambled["fake"]
         ];
         exit(json_encode($resp));
@@ -99,7 +114,7 @@ switch ($VARS['action']) {
         if ($database->has("scrambled_answers", ["AND" => ["sid" => $sid, "acode" => $VARS['answer_id']]])) {
             // Image maybe correct
             $image = true;
-        } else if ($database->has("sessions", ["[>]answers" => ["aid" => "aid"]], ["AND" => ["sid" => $sid, "aname" => $VARS['answer_id']]])) {
+        } else if ($database->has("sessions", ["[>]access_answers" => ["acqid" => "acqid"]], ["AND" => ["sid" => $sid, "OR" => ["acatext" => $VARS['answer_id'], "acahash" => hash('md5', $VARS['answer_id'])]]])) {
             // Accessible text correct
             $image = false;
         } else {

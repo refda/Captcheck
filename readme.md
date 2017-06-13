@@ -5,6 +5,7 @@ Easy, light, self-hostable CAPTCHA service.  Works on modern browsers (and
 IE9+).  Uses a selection of icons from Font-Awesome.  Text-only accessibility 
 mode and support for keyboard-only operation.
 
+Thanks to textcaptcha.com for supplying the data for the text CAPTCHA.
 
 How to use
 ----------

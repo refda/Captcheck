@@ -12,12 +12,17 @@ Don't use this file in your site; captcheck.js contains it.
     padding: 3px;
     margin: 5px 2px 5px 1px;
     background-color: #f5f5f5;
+    text-decoration: none;
 }
 
 .captcheck_label_message,
 .captcheck_label_message b {
     color: black;
-    font-family: Ubuntu, Arial, sans-serif;
+    font-family: Ubuntu, Roboto, Arial, sans-serif;
+}
+
+.captcheck_answer_label {
+    border: 0px;
 }
 
 .captcheck_answer_label > input {
@@ -58,6 +63,7 @@ Don't use this file in your site; captcheck.js contains it.
     cursor: pointer;
     color: inherit;
     text-decoration: inherit;
+    border: 0px;
 }
 
 .captcheck_answer_images {

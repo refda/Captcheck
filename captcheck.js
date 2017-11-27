@@ -28,7 +28,7 @@ window.onload = function () {
                     var answers = "<div class='captcheck_answer_images' id='captcheck_" + idp + "_answer_images'>";
                     for (var i = 0, len = data.answers.length; i < len; i++) {
                         var src = api_url + "?action=img&s=" + data.session + "&c=" + data.answers[i];
-                        answers += "<a class='captcheck_answer_label' href='' tabindex='0' onClick='chooseAnswer(\"" + idp + "\",\"" + data.answers[i] + "\"); return false;' onEnter='chooseAnswer(\"" + idp + "\",\"" + data.answers[i] + "\"); return false;'><input id='captcheck_" + idp + "_answer_" + data.answers[i] + "' type='radio' name='captcheck_selected_answer' value='" + data.answers[i] + "' /><img src='" + src + "' /></a>";
+                        answers += "<a class='captcheck_answer_label' href='' data-prefix='" + idp + "' data-answer='" + data.answers[i] + "' tabindex='0' aria-role='button'><input id='captcheck_" + idp + "_answer_" + data.answers[i] + "' type='radio' name='captcheck_selected_answer' value='" + data.answers[i] + "' data-prefix='" + idp + "' data-answer='" + data.answers[i] + "' /><img src='" + src + "' data-prefix='" + idp + "' data-answer='" + data.answers[i] + "'/></a>";
                     }
                     answers += "</div>";
                     var answer_div = document.createElement("div");
@@ -37,7 +37,7 @@ window.onload = function () {
                     var question_div = document.createElement("div");
                     question_div.setAttribute("class", "captcheck_label_message");
                     question_div.setAttribute("id", "captcheck_" + idp + "_label_message")
-                    question_div.innerHTML = "<span class='captcheck_question_image' id='captcheck_" + idp + "_question_image'>" + data.question_i + "</span><span class='captcheck_question_access' id='captcheck_" + idp + "_question_access'>" + data.question_a + "</span><a href='' class='captcheck_alt_question_button' onClick='switchMode(\"" + idp + "\"); return false;' onEnter='switchMode(\"" + idp + "\"); return false;' id='captcheck_" + idp + "_alt_question_button' aria-label='Switch between image and text question' tabindex='0'>&gt; Text mode</a>";
+                    question_div.innerHTML = "<span class='captcheck_question_image' id='captcheck_" + idp + "_question_image'>" + data.question_i + "</span><span class='captcheck_question_access' id='captcheck_" + idp + "_question_access'>" + data.question_a + "</span><a href='' class='captcheck_alt_question_button' data-prefix='" + idp + "' id='captcheck_" + idp + "_alt_question_button' aria-role='button' aria-label='Switch between image and text question' tabindex='0'>&gt; Text mode</a>";
 
                     /* Add question and answers */
                     captcha.appendChild(question_div);
@@ -47,6 +47,30 @@ window.onload = function () {
                     var skey_input = document.createElement("span");
                     skey_input.innerHTML = "<input type='hidden' name='captcheck_session_code' value='" + data.session + "' />";
                     captcha.appendChild(skey_input);
+                    
+                    var answer_buttons = document.querySelectorAll(".captcheck_answer_label[data-prefix=\"" + idp + "\"]");
+                    for (var i = 0; i < answer_buttons.length; i++) {
+                        answer_buttons[i].addEventListener("click", function (ev) {
+                            chooseAnswer(ev.target.getAttribute("data-prefix"), ev.target.getAttribute("data-answer"));
+                            ev.preventDefault();
+                        });
+                        answer_buttons[i].addEventListener('keydown', function(ev) {
+                            if (ev.key === "Enter" || ev.which === 13 || ev.keyCode === 13 || ev.key === ' ' || ev.which === 32 || ev.keyCode === 32) {
+                                chooseAnswer(ev.target.getAttribute("data-prefix"), ev.target.getAttribute("data-answer"));
+                                ev.preventDefault();
+                            }
+                        });
+                    }
+                    document.querySelector(".captcheck_alt_question_button[data-prefix=\"" + idp + "\"]").addEventListener("click", function (ev) {
+                        switchMode(ev.target.getAttribute("data-prefix"));
+                        ev.preventDefault();
+                    });
+                    document.querySelector(".captcheck_alt_question_button[data-prefix=\"" + idp + "\"]").addEventListener('keydown', function(ev) {
+                        if (ev.key === "Enter" || ev.which === 13 || ev.keyCode === 13 || ev.key === ' ' || ev.which === 32 || ev.keyCode === 32) {
+                            switchMode(ev.target.getAttribute("data-prefix"));
+                            ev.preventDefault();
+                        }
+                    });
                 } else {
                     /* Add error message */
                     captcha.innerHTML = "<span class='captcheck_error_message'>There was a problem loading the CAPTCHA.</span>";

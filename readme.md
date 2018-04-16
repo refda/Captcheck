@@ -1,8 +1,8 @@
 <img src="https://source.netsyms.com/Netsyms/Captcheck/raw/master/logo.png" alt="Captcheck" style="max-width: 50%;" />
 
 
-Easy, light, self-hostable CAPTCHA service.  Works on modern browsers (and 
-IE9+).  Uses a selection of icons from Font-Awesome.  Text-only accessibility 
+Easy, light, self-hostable CAPTCHA service.  Works on modern browsers (and
+IE9+).  Uses a selection of icons from Font-Awesome.  Text-only accessibility
 mode and support for keyboard-only operation.
 
 Thanks to textcaptcha.com for supplying the data for the text CAPTCHA.
@@ -10,7 +10,7 @@ Thanks to textcaptcha.com for supplying the data for the text CAPTCHA.
 How to use
 ----------
 
-In your form, put an empty div with the class "captcheck_container". 
+In your form, put an empty div with the class "captcheck_container".
 Add `captcheck.js` (or `captcheck.dist.js`) into your page.
 
     <!DOCTYPE html>
@@ -31,21 +31,27 @@ Add `captcheck.js` (or `captcheck.dist.js`) into your page.
         </body>
     </html>
 
-When the form is submitted, your server will receive two extra form fields: 
+When the form is submitted, your server will receive two extra form fields:
 `captcheck_session_code` and `captcheck_selected_answer`.
-In your form handling code, send a request to `http(s)://captcheck-url/api.php`. 
-Pass the variables `session_id` and `answer_id` with the values sent with the form, 
-and also pass the variable `action` with the value `verify`.  
-You will receive a JSON response with (among other things) `"result": true` or 
-`"result": false`.  If result is false, the user failed the test, and another 
+In your form handling code, send a request to `http(s)://captcheck-url/api.php`.
+Pass the variables `session_id` and `answer_id` with the values sent with the form,
+and also pass the variable `action` with the value `verify`.
+You will receive a JSON response with (among other things) `"result": true` or
+`"result": false`.  If result is false, the user failed the test, and another
 variable `msg` is available with an explanation.
 
-Example URL:  
+Example URL:
 `http(s)://captcheck-url/api.php?action=verify&session_id=<captcheck_session_code>&answer_id=<captcheck_selected_answer>`
 
-Example responses:  
-`{"session":"some_session_id","result":true}`  
+Example responses:
+`{"session":"some_session_id","result":true}`
 `{"session":"some_session_id","result":false,"msg":"Answer incorrect."}`
+
+###Content-Security-Policy and Nonces
+
+Add `data-stylenonce="nonce_here"` to the `.captcheck_container` div.
+If you have multiple CAPTCHAs on one page, only one of them needs the nonce
+specified.
 
 
 Installation
@@ -61,7 +67,7 @@ Installation
 Execution Flow
 --------------
 
-    JS = captcheck.js, API = api.php, FORM = parent form, 
+    JS = captcheck.js, API = api.php, FORM = parent form,
     SITE = form processing code, -> = some action taken on the right by the left
 
     JS -> API:      Request session ID, question, and answers (with scrambled random codes)

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<meta content="width=device-width,initial-scale=1" name=viewport>
+<title>Captcheck</title>
+<link rel="stylesheet" href="https://static.netsyms.net/bootstrap/4/bootstrap.minty.min.css" />
+<link rel="stylesheet" href="https://static.netsyms.net/prism/prism.css" />
+<script async src="https://static.netsyms.net/fontawesome/5.2/js/all.min.js"></script>
+<script defer async src="https://static.netsyms.net/prism/prism.js"></script>
+<style>
+    h2, h3, p {
+        text-align: center;
+    }
+
+    pre {
+        padding-left: 5px;
+
+    }
+
+    @media only screen and (min-width: 768px) and (max-width: 991px) {
+        h2, h3 {
+            text-align: left;
+        }
+        .site-icon {
+            margin-top: 18px;
+        }
+    }
+
+    @media only screen and (min-width: 992px) and (max-width: 1199px) {
+        h2, h3 {
+            text-align: left;
+        }
+        .site-icon {
+            margin-top: 14px;
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        h2, h3 {
+            text-align: left;
+        }
+        .site-icon {
+            margin-top: 0px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12" style="text-align: center;" >
+                    <img src="logo.png" class="site-icon" style="width: 400px; max-width: 100%;" />
+                </div>
+            </div>
+            <p style="font-size: 15px; line-height: 20px;">Open source reCAPTCHA alternative</p>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    <h4 class="card-heading d-flex"><span class="mr-auto">Demo</span> <a onclick="document.getElementById('demoframe').src = 'https://captcheck.netsyms.com/test.html'" title="Reset demo"><i class="fas fa-sync-alt"></i></a></h4>
+                </div>
+                <div class="card-body">
+                    <iframe style="border: 0px solid white; width: 100%; height: 100%; height: 200px;" src="https://captcheck.netsyms.com/test.html" id="demoframe"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-light">
+                    <h4 class="card-heading">Use</h4>
+                </div>
+                <div class="card-body">
+                    <b>Put this in your page somewhere:</b>
+                    <pre><code class="language-html">&lt;script src="https://captcheck.netsyms.com/captcheck.dist.js">&lt;/script></code></pre>
+                    <b>Put this in your form where you want the CAPTCHA:</b>
+                    <pre><code class="language-html">&lt;div class="captcheck_container">&lt;/div></code></pre>
+                    <b>Put this in your server-side form validation (PHP example):</b>
+                    <pre><code class="language-php">
+$url = 'https://captcheck.netsyms.com/api.php';
+$data = [
+    'session_id' => $_POST['captcheck_session_code'],
+    'answer_id' => $_POST['captcheck_selected_answer'],
+    'action' => "verify"
+];
+$options = [
+    'http' => [
+        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+        'method' => 'POST',
+        'content' => http_build_query($data)
+    ]
+];
+$context = stream_context_create($options);
+$result = file_get_contents($url, false, $context);
+$resp = json_decode($result, TRUE);
+if (!$resp['result']) {
+    // Replace with error-handling code
+    exit("CAPTCHA did not verify:" . $resp['msg']);
+} else {
+    // The CAPTCHA is valid.
+    exit("CAPTCHA verified!");
+}
+</code></pre>
+
+                    <b>If you have a strict Content Security Policy, change your div to this:</b>
+                    <pre><code class="language-html">&lt;div class="captcheck_container" data-stylenonce="your nonce here">&lt;/div></code></pre>
+
+                    Note: by using this hosted service, you agree to <a href="https://netsyms.com/legal">these terms</a>. If you don't like them, feel free to host Captcheck on your own server.
+                    Popular sites should self-host as well just to be nice.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer"><p>Copyright &copy; 2018 <a href="https://netsyms.com">Netsyms Technologies</a>.  MIT License.<br /><a href="https://source.netsyms.com/Netsyms/Captcheck">Get the source</a> and run your own CAPTCHA service.</p></div>
+</div>

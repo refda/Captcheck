@@ -43,6 +43,10 @@ window.onload = function () {
             if (this.readyState == 4) {
                 var status = this.status;
                 var json = this.responseText;
+                /* Prevent rare bug where two CAPTCHAs appear in one container */
+                if (container.innerHTML.trim() != "") {
+                    return;
+                }
                 /* Create captcha div */
                 var captcha = document.createElement("div");
                 captcha.setAttribute("class", "captcheck_box");

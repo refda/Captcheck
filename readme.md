@@ -11,7 +11,7 @@ How to use
 ----------
 
 In your form, put an empty div with the class "captcheck_container".
-Add `captcheck.js` (or `captcheck.dist.js`) into your page.
+Add `captcheck.js` (or `captcheck.min.js`) into your page.
 
     <!DOCTYPE html>
     <html>

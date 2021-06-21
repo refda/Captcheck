@@ -1,4 +1,8 @@
 {
+  "name": "refda/Captcheck",
+  "description": "PHP Captcha Library",
+  "version": "0.4",
+  "license": "MIT",
     "require": {
         "catfan/medoo": "^1.4"
     }

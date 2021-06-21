@@ -19,7 +19,8 @@ session_start(); // stick some cookies in it
 setcookie(session_name(), session_id(), time() + $session_length);
 
 // Composer
-require __DIR__ . '/vendor/autoload.php';
+// require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/medoo.php';
 
 require __DIR__ . '/settings.php';
 
